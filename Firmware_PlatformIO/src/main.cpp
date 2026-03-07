@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #define PWMA 6
 #define PWMB 16
 
@@ -10,6 +12,13 @@
 
 #define PWM_FREQ 1000
 #define PWM_RES 8
+
+// Function Prototypes
+void forward(int pwm);
+void reverse(int pwm);
+void turnLeft();
+void turnRight();
+void stopMotors();
 
 void setup() {
   Serial.begin(115200);
