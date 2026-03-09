@@ -43,21 +43,21 @@ void reverse(int pwm) {
 }
 
 void turnLeft() {
-    digitalWrite(AIN1, LOW);
-    digitalWrite(AIN2, HIGH);
-    digitalWrite(BIN1, HIGH);
-    digitalWrite(BIN2, LOW);
-    ledcWrite(CH_A, 64);
-    ledcWrite(CH_B, 64);
-}
-
-void turnRight() {
     digitalWrite(AIN1, HIGH);
     digitalWrite(AIN2, LOW);
     digitalWrite(BIN1, LOW);
     digitalWrite(BIN2, HIGH);
-    ledcWrite(CH_A, 64);
-    ledcWrite(CH_B, 64);
+    ledcWrite(CH_A, 128);
+    ledcWrite(CH_B, 128);
+}
+
+void turnRight() {
+    digitalWrite(AIN1, LOW);
+    digitalWrite(AIN2, HIGH);
+    digitalWrite(BIN1, HIGH);
+    digitalWrite(BIN2, LOW);
+    ledcWrite(CH_A, 128);
+    ledcWrite(CH_B, 128);
 }
 
 void stopMotors() {

@@ -69,6 +69,7 @@ class ControlNode(Node):
         
         elif cmd == "STOP":
             motor_msg = String()
+            self.current_gear = "N"
             motor_msg.data = "STOP"
             self.publisher.publish(motor_msg)
             self.get_logger().info("CONTROL → STOP")
