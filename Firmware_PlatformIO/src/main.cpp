@@ -7,24 +7,38 @@ void setup() {
 }
 
 void loop() {
+
   if (Serial.available()) {
+
     String cmd = Serial.readStringUntil('\n');
     cmd.trim();
 
     if (cmd.startsWith("FWD:")) {
-      forward(cmd.substring(4).toInt());
+
+      int pwm = cmd.substring(4).toInt();
+      forward(pwm);
+
     }
     else if (cmd.startsWith("REV:")) {
-      reverse(cmd.substring(4).toInt());
+
+      int pwm = cmd.substring(4).toInt();
+      reverse(pwm);
+
     }
     else if (cmd == "LEFT") {
+
       turnLeft();
+
     }
     else if (cmd == "RIGHT") {
+
       turnRight();
+
     }
     else if (cmd == "STOP") {
+
       stopMotors();
+
     }
   }
 }

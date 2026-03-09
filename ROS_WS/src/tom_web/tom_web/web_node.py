@@ -31,13 +31,17 @@ def home():
     return """
     <h1>TOM Control</h1>
 
-    <button onclick="fetch('/cmd/UP')">Gear +</button>
-    <button onclick="fetch('/cmd/DOWN')">Gear -</button>
+<button onclick="fetch('/cmd/UP')">Gear +</button>
+<button onclick="fetch('/cmd/DOWN')">Gear -</button>
 
-    <br><br>
+<br><br>
 
-    <button onclick="fetch('/cmd/LEFT')">LEFT</button>
-    <button onclick="fetch('/cmd/RIGHT')">RIGHT</button>
+<button onclick="fetch('/cmd/LEFT')">LEFT</button>
+<button onclick="fetch('/cmd/RIGHT')">RIGHT</button>
+
+<br><br>
+
+<button onclick="fetch('/cmd/STOP')">STOP</button>
     """
 
 

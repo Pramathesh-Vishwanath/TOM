@@ -3,13 +3,14 @@ from rclpy.node import Node
 from std_msgs.msg import String
 
 
-GEARS = ["R", "N", "1", "2"]
+GEARS = ["R", "N", "1", "2", "3"]
 
 GEAR_PWM = {
-    "R": 129,
+    "R": 64,
     "N": 0,
-    "1": 129,
-    "2": 255
+    "1": 64,
+    "2": 128,
+    "3": 255
 }
 
 
@@ -65,7 +66,14 @@ class ControlNode(Node):
 
             self.get_logger().info("CONTROL → RIGHT")
             return
-
+        
+        elif cmd == "STOP":
+            motor_msg = String()
+            motor_msg.data = "STOP"
+            self.publisher.publish(motor_msg)
+            self.get_logger().info("CONTROL → STOP")
+            return
+        
         self.current_gear = GEARS[self.gear_index]
 
         pwm = GEAR_PWM[self.current_gear]
