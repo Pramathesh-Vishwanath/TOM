@@ -10,15 +10,20 @@ class MotorNode(Node):
 
         self.subscription = self.create_subscription(
             String,
-            'motor_cmd',
+            '/motor_cmd',
             self.motor_callback,
             10)
 
     def motor_callback(self, msg):
 
-        cmd = msg.data
+        command = msg.data
 
-        self.get_logger().info(f"MOTOR executing: {cmd}")
+        self.get_logger().info(
+            f"MOTOR → sending to ESP32: {command}"
+        )
+
+        # Later this will become:
+        # serial.write(command.encode())
 
 
 def main(args=None):

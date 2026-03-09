@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from geometry_msgs.msg import Twist
 
 
 class WebNode(Node):
@@ -8,21 +8,32 @@ class WebNode(Node):
     def __init__(self):
         super().__init__('web_node')
 
-        self.publisher = self.create_publisher(String, 'web_cmd', 10)
+        self.publisher = self.create_publisher(Twist, '/cmd_vel', 10)
 
-        self.timer = self.create_timer(2.0, self.publish_cmd)
+        self.timer = self.create_timer(2.0, self.send_command)
 
-        self.commands = ["UP", "LEFT", "RIGHT", "DOWN"]
+        self.commands = [
+            ("FORWARD", 0.5, 0.0),
+            ("LEFT", 0.0, 1.0),
+            ("RIGHT", 0.0, -1.0),
+            ("STOP", 0.0, 0.0)
+        ]
+
         self.index = 0
 
-    def publish_cmd(self):
+    def send_command(self):
 
-        msg = String()
-        msg.data = self.commands[self.index]
+        name, lin, ang = self.commands[self.index]
+
+        msg = Twist()
+        msg.linear.x = lin
+        msg.angular.z = ang
 
         self.publisher.publish(msg)
 
-        self.get_logger().info(f"WEB → {msg.data}")
+        self.get_logger().info(
+            f"WEB → {name} | linear={lin} angular={ang}"
+        )
 
         self.index = (self.index + 1) % len(self.commands)
 
