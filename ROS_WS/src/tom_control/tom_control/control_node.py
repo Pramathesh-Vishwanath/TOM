@@ -1,7 +1,16 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Twist
 from std_msgs.msg import String
+
+
+GEARS = ["R", "N", "1", "2"]
+
+GEAR_PWM = {
+    "R": 129,
+    "N": 0,
+    "1": 129,
+    "2": 255
+}
 
 
 class ControlNode(Node):
@@ -10,8 +19,8 @@ class ControlNode(Node):
         super().__init__('control_node')
 
         self.subscription = self.create_subscription(
-            Twist,
-            '/cmd_vel',
+            String,
+            '/web_cmd',
             self.cmd_callback,
             10)
 
@@ -20,23 +29,62 @@ class ControlNode(Node):
             '/motor_cmd',
             10)
 
-        self.wheel_base = 0.2
+        self.gear_index = GEARS.index("N")
+        self.current_gear = "N"
 
     def cmd_callback(self, msg):
 
-        v = msg.linear.x
-        w = msg.angular.z
+        cmd = msg.data
 
-        left = v - (w * self.wheel_base / 2)
-        right = v + (w * self.wheel_base / 2)
+        if cmd == "UP":
+            if self.gear_index < len(GEARS) - 1:
+                self.gear_index += 1
+
+        elif cmd == "DOWN":
+            if self.gear_index > 0:
+                self.gear_index -= 1
+
+        elif cmd == "LEFT":
+            self.gear_index = GEARS.index("N")
+            self.current_gear = "N"
+
+            motor_msg = String()
+            motor_msg.data = "LEFT"
+            self.publisher.publish(motor_msg)
+
+            self.get_logger().info("CONTROL → LEFT")
+            return
+
+        elif cmd == "RIGHT":
+            self.gear_index = GEARS.index("N")
+            self.current_gear = "N"
+
+            motor_msg = String()
+            motor_msg.data = "RIGHT"
+            self.publisher.publish(motor_msg)
+
+            self.get_logger().info("CONTROL → RIGHT")
+            return
+
+        self.current_gear = GEARS[self.gear_index]
+
+        pwm = GEAR_PWM[self.current_gear]
 
         motor_msg = String()
-        motor_msg.data = f"L:{left:.2f},R:{right:.2f}"
+
+        if self.current_gear == "R":
+            motor_msg.data = f"REV:{pwm}"
+
+        elif self.current_gear == "N":
+            motor_msg.data = "STOP"
+
+        else:
+            motor_msg.data = f"FWD:{pwm}"
 
         self.publisher.publish(motor_msg)
 
         self.get_logger().info(
-            f"CONTROL → left={left:.2f} right={right:.2f}"
+            f"CONTROL → Gear {self.current_gear} | {motor_msg.data}"
         )
 
 

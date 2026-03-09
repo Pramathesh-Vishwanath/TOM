@@ -1,12 +1,25 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
+import serial
 
 
-class MotorNode(Node):
+SERIAL_PORT = "/dev/ttyUSB0"
+BAUD = 115200
+
+
+class BridgeNode(Node):
 
     def __init__(self):
-        super().__init__('motor_node')
+        super().__init__('bridge_node')
+
+        try:
+            self.serial = serial.Serial(SERIAL_PORT, BAUD, timeout=1)
+            self.get_logger().info("ESP32 connected")
+
+        except:
+            self.serial = None
+            self.get_logger().warn("ESP32 not connected")
 
         self.subscription = self.create_subscription(
             String,
@@ -16,19 +29,17 @@ class MotorNode(Node):
 
     def motor_callback(self, msg):
 
-        command = msg.data
+        cmd = msg.data
 
-        self.get_logger().info(
-            f"MOTOR → sending to ESP32: {command}"
-        )
+        self.get_logger().info(f"BRIDGE → {cmd}")
 
-        # Later this will become:
-        # serial.write(command.encode())
+        if self.serial:
+            self.serial.write((cmd + "\n").encode())
 
 
 def main(args=None):
     rclpy.init(args=args)
-    node = MotorNode()
+    node = BridgeNode()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
