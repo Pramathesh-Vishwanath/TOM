@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'web_node = tom_web.web_node:main',
         ],
     },
 )
