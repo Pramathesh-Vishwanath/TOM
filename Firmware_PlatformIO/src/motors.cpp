@@ -47,8 +47,8 @@ void turnLeft() {
     digitalWrite(AIN2, LOW);
     digitalWrite(BIN1, LOW);
     digitalWrite(BIN2, HIGH);
-    ledcWrite(CH_A, 90);
-    ledcWrite(CH_B, 90);
+    ledcWrite(CH_A, 70);
+    ledcWrite(CH_B, 70);
 }
 
 void turnRight() {
@@ -56,8 +56,8 @@ void turnRight() {
     digitalWrite(AIN2, HIGH);
     digitalWrite(BIN1, HIGH);
     digitalWrite(BIN2, LOW);
-    ledcWrite(CH_A, 90);
-    ledcWrite(CH_B, 90);
+    ledcWrite(CH_A, 70);
+    ledcWrite(CH_B, 70);
 }
 
 void stopMotors() {
